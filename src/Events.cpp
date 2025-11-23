@@ -13,6 +13,7 @@ namespace CompanionTakeAll::Events
 			if (a_event.opening == true)
 			{
 				CompanionTakeAll::CompanionActorPointer = nullptr;
+				CompanionTakeAll::UsedAmmoPointer = nullptr;
 
 				Scaleform::Ptr<RE::ContainerMenu> ContainerMenuPointer = CompanionTakeAll::UIPointer->GetMenu<RE::ContainerMenu>();
 				if (ContainerMenuPointer)
@@ -22,7 +23,7 @@ namespace CompanionTakeAll::Events
 					{
 						RE::Actor* ActorReference = (RE::Actor*)ContainerReferencePointer;
 
-						if (ActorReference && ActorReference->IsFollowing() && !ActorReference->IsDead(true))
+						if (ActorReference && CompanionTakeAll::IsFollowing(ActorReference, CompanionTakeAll::PlayerCharacterPointer) && !ActorReference->IsDead(true))
 						{
 							CompanionTakeAll::CompanionActorPointer = ActorReference;
 						}
