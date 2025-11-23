@@ -1,6 +1,6 @@
 # Companion Take All NG
 
-Companion Take All ported to FO4 1.10.984.0+.
+Companion Take All ported to FO4 1.10.984.0+.<br>
 Supports both the Next-Gen and Anniversary Editions of the Game.
 
 ### Requirements
