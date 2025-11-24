@@ -11,6 +11,19 @@ namespace CompanionTakeAll
 	// IsFollowing(Actor) Relocation
 	inline REL::ID IsFollowingActorFunctionID(2230141);
 
+	// Keyword Forms
+	inline RE::BGSKeyword* LockpickCommandKeyword = nullptr;
+	inline RE::BGSKeyword* UsesStimpakKeyword = nullptr;
+	inline RE::BGSKeyword* UsesRepairKitKeyword = nullptr;
+
+	// Item Forms
+	inline RE::TESForm* BobbyPinItem = nullptr;
+	inline RE::TESForm* StimpakItem = nullptr;
+	inline RE::TESForm* RepairKitItem = nullptr;
+
+	// Excluded Items Set
+	inline std::unordered_set<RE::TESForm*> ExcludedItemsSet;
+
 	// Pointers
 	inline RE::BGSInventoryInterface* InventoryInterfacePointer = nullptr;
 	inline RE::PlayerCharacter* PlayerCharacterPointer = nullptr;
@@ -64,11 +77,18 @@ namespace CompanionTakeAll
 			if (ItemPointer)
 			{
 				RE::TESBoundObject* ItemObject = ItemPointer->object;
-
-				// Skip if it is the Used Ammo Type
-				if (ItemObject && ItemObject->formType == RE::ENUM_FORM_ID::kAMMO && ItemObject == UsedAmmoPointer)
+				if (ItemObject)
 				{
-					return;
+					// Skip if it is the Used Ammo Type
+					if (ItemObject->formType == RE::ENUM_FORM_ID::kAMMO && ItemObject == UsedAmmoPointer)
+					{
+						return;
+					}
+					// Skip Excluded Items (Healing, Bobby Pins, etc..)
+					else if (ExcludedItemsSet.contains(ItemObject))
+					{
+						return;
+					}
 				}
 
 				// Get the Stack & Stack Count
@@ -120,7 +140,9 @@ namespace CompanionTakeAll
 
 	inline bool Install()
 	{
+		// Register for the Messaging Interface
 		Messaging::Register();
+
 		return true;
 	}
 }

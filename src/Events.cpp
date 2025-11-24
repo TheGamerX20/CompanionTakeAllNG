@@ -14,6 +14,7 @@ namespace CompanionTakeAll::Events
 			{
 				CompanionTakeAll::CompanionActorPointer = nullptr;
 				CompanionTakeAll::UsedAmmoPointer = nullptr;
+				CompanionTakeAll::ExcludedItemsSet.clear();
 
 				Scaleform::Ptr<RE::ContainerMenu> ContainerMenuPointer = CompanionTakeAll::UIPointer->GetMenu<RE::ContainerMenu>();
 				if (ContainerMenuPointer)
@@ -26,6 +27,26 @@ namespace CompanionTakeAll::Events
 						if (ActorReference && CompanionTakeAll::IsFollowing(ActorReference, CompanionTakeAll::PlayerCharacterPointer) && !ActorReference->IsDead(true))
 						{
 							CompanionTakeAll::CompanionActorPointer = ActorReference;
+
+							// Get Keywords (for some reason, All Actors have the UsesRepairKitKeyword?)
+							bool KeepBobbyPins = ActorReference->HasKeyword(CompanionTakeAll::LockpickCommandKeyword);
+							bool UsesStimpak = ActorReference->HasKeyword(CompanionTakeAll::UsesStimpakKeyword);
+							bool UsesRepairKit = ActorReference->HasKeyword(CompanionTakeAll::UsesRepairKitKeyword);
+
+							// Populate Excluded Item Set
+							if (KeepBobbyPins)
+							{
+								CompanionTakeAll::ExcludedItemsSet.insert(CompanionTakeAll::BobbyPinItem);
+							}
+
+							if (UsesStimpak)
+							{
+								CompanionTakeAll::ExcludedItemsSet.insert(CompanionTakeAll::StimpakItem);
+							}
+							else if (UsesRepairKit)
+							{
+								CompanionTakeAll::ExcludedItemsSet.insert(CompanionTakeAll::RepairKitItem);
+							}
 						}
 						else
 						{
