@@ -24,28 +24,37 @@ namespace CompanionTakeAll::Events
 					{
 						RE::Actor* ActorReference = (RE::Actor*)ContainerReferencePointer;
 
-						if (ActorReference && CompanionTakeAll::IsFollowing(ActorReference, CompanionTakeAll::PlayerCharacterPointer) && !ActorReference->IsDead(true))
+						if (ActorReference && !ActorReference->IsDead(true) && (CompanionTakeAll::iTarget.GetValue() == CompanionTakeAll::TargetOptions::AllNPCs ||
+							(CompanionTakeAll::iTarget.GetValue() == CompanionTakeAll::TargetOptions::CurrentCompanion && CompanionTakeAll::IsFollowing(ActorReference, CompanionTakeAll::PlayerCharacterPointer))))
 						{
 							CompanionTakeAll::CompanionActorPointer = ActorReference;
 
-							// Get Keywords (for some reason, All Actors have the UsesRepairKitKeyword?)
-							bool KeepBobbyPins = ActorReference->HasKeyword(CompanionTakeAll::LockpickCommandKeyword);
-							bool UsesStimpak = ActorReference->HasKeyword(CompanionTakeAll::UsesStimpakKeyword);
-							bool UsesRepairKit = ActorReference->HasKeyword(CompanionTakeAll::UsesRepairKitKeyword);
-
-							// Populate Excluded Item Set
-							if (KeepBobbyPins)
+							// Keep Bobby Pins
+							if (CompanionTakeAll::iKeepBobbyPins.GetValue())
 							{
-								CompanionTakeAll::ExcludedItemsSet.insert(CompanionTakeAll::BobbyPinItem);
+								bool KeepBobbyPins = ActorReference->HasKeyword(CompanionTakeAll::LockpickCommandKeyword);
+
+								if (KeepBobbyPins)
+								{
+									CompanionTakeAll::ExcludedItemsSet.insert(CompanionTakeAll::BobbyPinItem);
+								}
 							}
 
-							if (UsesStimpak)
+							// Keep Healing Items
+							if (CompanionTakeAll::iKeepHealingItems.GetValue())
 							{
-								CompanionTakeAll::ExcludedItemsSet.insert(CompanionTakeAll::StimpakItem);
-							}
-							else if (UsesRepairKit)
-							{
-								CompanionTakeAll::ExcludedItemsSet.insert(CompanionTakeAll::RepairKitItem);
+								// For some reason, all Actors have the UsesRepairKitKeyword?
+								bool UsesStimpak = ActorReference->HasKeyword(CompanionTakeAll::UsesStimpakKeyword);
+								bool UsesRepairKit = ActorReference->HasKeyword(CompanionTakeAll::UsesRepairKitKeyword);
+
+								if (UsesStimpak)
+								{
+									CompanionTakeAll::ExcludedItemsSet.insert(CompanionTakeAll::StimpakItem);
+								}
+								else if (UsesRepairKit)
+								{
+									CompanionTakeAll::ExcludedItemsSet.insert(CompanionTakeAll::RepairKitItem);
+								}
 							}
 						}
 						else

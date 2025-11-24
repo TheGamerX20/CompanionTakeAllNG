@@ -4,6 +4,17 @@
 
 namespace CompanionTakeAll
 {
+	enum TargetOptions
+	{
+		CurrentCompanion = 0,
+		AllNPCs = 1
+	};
+
+	// Config Options
+	static REX::INI::I32 iTarget{ "Options"sv, "Target"sv, (int)TargetOptions::CurrentCompanion };
+	static REX::INI::Bool iKeepBobbyPins{ "Options"sv, "KeepBobbyPins"sv, true };
+	static REX::INI::Bool iKeepHealingItems{ "Options"sv, "KeepHealingItems"sv, true };
+
 	// Transfer Item Relocations
 	inline REL::Relocation<uintptr_t> TransferItemCallRelocation(REL::ID(2248619), REL::Offset(0x22B));
 	inline REL::ID TransferItemFunctionID(2248607);
