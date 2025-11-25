@@ -29,6 +29,12 @@ namespace CompanionTakeAll::Events
 						{
 							CompanionTakeAll::CompanionActorPointer = ActorReference;
 
+							// Keep Grenades
+							if (CompanionTakeAll::iKeepGrenades.GetValue())
+							{
+								CompanionTakeAll::ExcludedItemsSet = CompanionTakeAll::GrenadeSet;
+							}
+
 							// Keep Bobby Pins
 							if (CompanionTakeAll::iKeepBobbyPins.GetValue())
 							{

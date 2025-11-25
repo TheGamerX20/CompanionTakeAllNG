@@ -12,6 +12,7 @@ namespace CompanionTakeAll
 
 	// Config Options
 	static REX::INI::I32 iTarget{ "Options"sv, "Target"sv, (int)TargetOptions::CurrentCompanion };
+	static REX::INI::Bool iKeepGrenades{ "Options"sv, "KeepGrenades"sv, true };
 	static REX::INI::Bool iKeepBobbyPins{ "Options"sv, "KeepBobbyPins"sv, true };
 	static REX::INI::Bool iKeepHealingItems{ "Options"sv, "KeepHealingItems"sv, true };
 
@@ -32,7 +33,11 @@ namespace CompanionTakeAll
 	inline RE::TESForm* StimpakItem = nullptr;
 	inline RE::TESForm* RepairKitItem = nullptr;
 
-	// Excluded Items Set
+	// Slots
+	inline RE::BGSEquipSlot* GrenadeSlot = nullptr;
+
+	// Item Sets
+	inline std::unordered_set<RE::TESForm*> GrenadeSet;
 	inline std::unordered_set<RE::TESForm*> ExcludedItemsSet;
 
 	// Pointers

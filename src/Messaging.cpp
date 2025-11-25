@@ -37,6 +37,19 @@ namespace CompanionTakeAll::Messaging
             CompanionTakeAll::StimpakItem = CompanionTakeAll::DataHandlerPointer->LookupForm(0x023736, "Fallout4.esm");
             CompanionTakeAll::RepairKitItem = CompanionTakeAll::DataHandlerPointer->LookupForm(0x004F12, "DLCRobot.esm");
 
+            // Lookup Slots
+            CompanionTakeAll::GrenadeSlot = (RE::BGSEquipSlot*)CompanionTakeAll::DataHandlerPointer->LookupForm(0x046AAC, "Fallout4.esm");
+
+            // Lookup Grenades
+            auto& WeaponsArray = CompanionTakeAll::DataHandlerPointer->GetFormArray<RE::TESObjectWEAP>();
+            for (auto& Weapon : WeaponsArray)
+            {
+                if (Weapon && Weapon->equipSlot && Weapon->equipSlot == CompanionTakeAll::GrenadeSlot)
+                {
+                    GrenadeSet.insert(Weapon);
+                }
+            }
+
             // Listen for a Menu Open / Close Event
             Events::MenuOpenCloseEventSink* MenuEventSink = new Events::MenuOpenCloseEventSink();
             CompanionTakeAll::UIPointer->GetEventSource<RE::MenuOpenCloseEvent>()->RegisterSink(MenuEventSink);
