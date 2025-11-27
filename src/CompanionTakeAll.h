@@ -47,6 +47,7 @@ namespace CompanionTakeAll
 	inline RE::Actor* CompanionActorPointer = nullptr;
 	inline RE::TESAmmo* UsedAmmoPointer = nullptr;
 	inline RE::UI* UIPointer = nullptr;
+	inline int CurrentItemIndex = 0;
 
 	// -------- Game Functions -------- //
 
@@ -68,6 +69,9 @@ namespace CompanionTakeAll
 
 	inline void TransferItemHook(RE::ContainerMenu* a_container, const RE::InventoryUserUIInterfaceEntry& a_entry, uint32_t a_count, bool a_fromContainer)
 	{
+		// Increase Item Index Prematurely to avoid the Returns
+		CurrentItemIndex++;
+
 		if (CompanionActorPointer && a_container)
 		{
 			// Find Ammo Used
@@ -98,11 +102,13 @@ namespace CompanionTakeAll
 					// Skip if it is the Used Ammo Type
 					if (ItemObject->formType == RE::ENUM_FORM_ID::kAMMO && ItemObject == UsedAmmoPointer)
 					{
+						// Do not Transfer
 						return;
 					}
 					// Skip Excluded Items (Healing, Bobby Pins, etc..)
 					else if (ExcludedItemsSet.contains(ItemObject))
 					{
+						// Do not Transfer
 						return;
 					}
 				}
@@ -116,19 +122,22 @@ namespace CompanionTakeAll
 				{
 					if (StackCount == 1)
 					{
+						// Do not Transfer
 						return;
 					}
 					else if (StackCount > 1)
 					{
-						// Remember & Remove Flags (to remove the Equip Lock)
-						REX::EnumSet<RE::BGSInventoryItem::Stack::Flag, std::uint16_t> flags = StackPointer->flags;
-						StackPointer->flags.reset();
+						// Un-Equip the Item
+						a_container->ToggleItemEquipped(CurrentItemIndex - 1, true);
 
 						// Transfer the Extra Items
 						TransferItem(a_container, a_entry, ItemPointer->GetCount() - 1, a_fromContainer);
 
-						// Readd the Flags
-						StackPointer->flags = flags;
+						// Re-Equip the Item if needed
+						if (!StackPointer->IsEquipped())
+						{
+							a_container->ToggleItemEquipped(CurrentItemIndex - 1, true);
+						}
 
 						// Already Transferred
 						return;

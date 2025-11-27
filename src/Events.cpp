@@ -15,6 +15,7 @@ namespace CompanionTakeAll::Events
 				CompanionTakeAll::CompanionActorPointer = nullptr;
 				CompanionTakeAll::UsedAmmoPointer = nullptr;
 				CompanionTakeAll::ExcludedItemsSet.clear();
+				CompanionTakeAll::CurrentItemIndex = 0;
 
 				Scaleform::Ptr<RE::ContainerMenu> ContainerMenuPointer = CompanionTakeAll::UIPointer->GetMenu<RE::ContainerMenu>();
 				if (ContainerMenuPointer)
